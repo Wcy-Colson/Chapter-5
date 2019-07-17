@@ -16,6 +16,9 @@ import retrofit2.http.Query;
  * @date 2019.01.17 20:38
  */
 public interface IMiniDouyinService {
+
+    String HOST = "http://test.androidcamp.bytedance.com/";
+
     // TODO-C2 (7) Implement your MiniDouyin PostVideo Request here,
     // url: (POST) http://test.androidcamp.bytedance.com/mini_douyin/invoke/video?student_id={student_id}&user_name={user_name}
     // body
@@ -28,6 +31,13 @@ public interface IMiniDouyinService {
     //    .com/obj/developer-baas/baas/tt7217xbo2wz3cem41/a8efa55c5c22de69_1560563154288.mp4",
     //    "success": true
     //}
+    @Multipart
+    @POST("/mini_douyin/invoke/video")
+    Call<PostVideoResponse>createVideo(
+            @Query("student_id") String studentId,
+            @Query("user_name") String userName,
+            @Part MultipartBody.Part image,@Part MultipartBody.Part video
+    );
 
     // TODO-C2 (8) Implement your MiniDouyin Feed Request here, url: (GET) http://test.androidcamp.bytedance.com/mini_douyin/invoke/video
     // response
@@ -50,4 +60,7 @@ public interface IMiniDouyinService {
     //    ],
     //    "success":true
     //}
+
+    @GET("/mini_douyin/invoke/video")
+    Call<FeedResponse> fetchFeed();
 }

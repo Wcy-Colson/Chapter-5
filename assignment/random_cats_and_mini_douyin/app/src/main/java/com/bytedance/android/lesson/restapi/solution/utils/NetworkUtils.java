@@ -1,6 +1,12 @@
 package com.bytedance.android.lesson.restapi.solution.utils;
 
 
+import com.bytedance.android.lesson.restapi.solution.bean.Cat;
+import com.bytedance.android.lesson.restapi.solution.bean.FeedResponse;
+import com.bytedance.android.lesson.restapi.solution.bean.PostVideoResponse;
+import com.bytedance.android.lesson.restapi.solution.newtork.ICatService;
+import com.bytedance.android.lesson.restapi.solution.newtork.IMiniDouyinService;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,7 +14,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 import java.util.Scanner;
+
+import okhttp3.MultipartBody;
+import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Part;
+import retrofit2.http.Query;
 
 /**
  * @author Xavier.S
@@ -41,6 +55,39 @@ public class NetworkUtils {
             }
         }
         return result;
+    }
+
+//    public static Call<List<Cat>> getResponseWithRetrofitAsync() {
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(ICatService.HOST)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//
+//        return retrofit.create(ICatService.class).getRandomCats();
+//    }
+
+    public static Call<PostVideoResponse> getResponseWithRetrofitAsyncPost(
+            @Query("student_id") String studentId,
+            @Query("user_name") String userName,
+            @Part MultipartBody.Part image,
+            @Part MultipartBody.Part video
+    ) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(IMiniDouyinService.HOST)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        return retrofit.create(IMiniDouyinService.class).createVideo(studentId, userName, image, video);
+    }
+
+    public static Call<FeedResponse> getResponseWithRetrofitAsyncFeed(
+    ) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(IMiniDouyinService.HOST)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        return retrofit.create(IMiniDouyinService.class).fetchFeed();
     }
 
     private static String readStream(final InputStream inputStream) {
